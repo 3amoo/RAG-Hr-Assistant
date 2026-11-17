@@ -6,25 +6,37 @@
   <title>RAG-Hr-Assistant — Policy copilot</title>
   <style>
     :root {
-      color-scheme: light dark;
+      color-scheme: dark;
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
       line-height: 1.5;
+
+      --bg: #0f1216;
+      --surface: #1a1f27;
+      --input-bg: #11151b;
+      --border: #2d3542;
+      --text: #e6e9ee;
+      --muted: #9aa6b6;
+      --accent: #5b8cff;
+      --notice-bg: #2a2418;
+      --notice-border: #6b5420;
+      --notice-text: #fde68a;
+      --ok-bg: #14342a;
+      --ok-text: #6ee7a8;
+      --warn-bg: #3a2f14;
+      --warn-text: #fcd34d;
+      --error-bg: #35191c;
+      --error-border: #7f2b2b;
+      --error-text: #fca5a5;
+      --code-bg: #242b35;
     }
 
     body {
       margin: 0;
-      background: #f5f6f8;
-      color: #1b1f24;
+      background: var(--bg);
+      color: var(--text);
     }
 
-    @media (prefers-color-scheme: dark) {
-      body { background: #15181c; color: #e6e9ee; }
-      .card { background: #1e2229; border-color: #333a45; }
-      input, textarea { background: #15181c; color: inherit; border-color: #3b434f; }
-      code { background: #262c35; }
-      .notice { background: #2a2418; border-color: #6b5420; color: #fde68a; }
-      .citation { border-top-color: #333a45; }
-    }
+    a { color: var(--accent); }
 
     main {
       max-width: 760px;
@@ -33,28 +45,28 @@
     }
 
     h1 { margin-bottom: 4px; }
-    .subtitle { margin-top: 0; opacity: 0.8; }
+    .subtitle { margin-top: 0; color: var(--muted); }
 
     .card {
-      background: #fff;
-      border: 1px solid #dfe3e8;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 20px;
       margin-bottom: 16px;
     }
 
     .notice {
-      background: #fffbeb;
-      border: 1px solid #fcd34d;
+      background: var(--notice-bg);
+      border: 1px solid var(--notice-border);
       border-radius: 10px;
       padding: 16px 20px;
       margin-bottom: 16px;
-      color: #78350f;
+      color: var(--notice-text);
     }
     .notice h2 { margin: 0 0 8px; font-size: 1.05rem; }
     .notice p { margin: 8px 0; }
     .notice code, code {
-      background: #f1f5f9;
+      background: var(--code-bg);
       padding: 1px 5px;
       border-radius: 4px;
       font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
@@ -73,15 +85,18 @@
       box-sizing: border-box;
       margin-top: 6px;
       padding: 8px 10px;
-      border: 1px solid #cbd2da;
+      background: var(--input-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
       border-radius: 6px;
       font: inherit;
     }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
 
     .actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
 
     button {
-      background: #2563eb;
+      background: var(--accent);
       color: #fff;
       border: 0;
       border-radius: 6px;
@@ -92,18 +107,18 @@
     }
     button:disabled { opacity: 0.6; cursor: wait; }
 
-    #status { opacity: 0.8; font-size: 0.9rem; }
+    #status { color: var(--muted); font-size: 0.9rem; }
 
     .server-status {
       display: inline-block;
       font-size: 0.8rem;
       padding: 2px 8px;
       border-radius: 999px;
-      background: #e2e8f0;
-      color: #334155;
+      background: var(--code-bg);
+      color: var(--muted);
     }
-    .server-status.ok { background: #dcfce7; color: #166534; }
-    .server-status.warn { background: #fef3c7; color: #92400e; }
+    .server-status.ok { background: var(--ok-bg); color: var(--ok-text); }
+    .server-status.warn { background: var(--warn-bg); color: var(--warn-text); }
 
     .result-head { display: flex; align-items: center; gap: 12px; }
     .result-head h2 { margin-bottom: 8px; }
@@ -112,23 +127,23 @@
       font-size: 0.8rem;
       padding: 2px 8px;
       border-radius: 999px;
-      background: #dcfce7;
-      color: #166534;
+      background: var(--ok-bg);
+      color: var(--ok-text);
     }
-    .badge.low { background: #fef3c7; color: #92400e; }
+    .badge.low { background: var(--warn-bg); color: var(--warn-text); }
 
     .citation {
-      border-top: 1px solid #dfe3e8;
+      border-top: 1px solid var(--border);
       padding: 10px 0;
     }
     .citation:first-child { border-top: 0; }
-    .meta { font-size: 0.85rem; opacity: 0.8; }
-    blockquote { margin: 6px 0 0; padding-left: 12px; border-left: 3px solid #2563eb; }
+    .meta { font-size: 0.85rem; color: var(--muted); }
+    blockquote { margin: 6px 0 0; padding-left: 12px; border-left: 3px solid var(--accent); }
 
-    .error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .error { background: var(--error-bg); border-color: var(--error-border); color: var(--error-text); }
     .hidden { display: none; }
 
-    footer { margin-top: 20px; font-size: 0.85rem; opacity: 0.75; }
+    footer { margin-top: 20px; font-size: 0.85rem; color: var(--muted); }
   </style>
 </head>
 <body>
