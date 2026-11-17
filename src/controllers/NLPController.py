@@ -1,5 +1,6 @@
 from .BaseController import BaseController
-from models.db_schemes import Project, DataChunk
+from models.db_schemes import Project, DataChunk, RetrievedDocument
+from models.RagModels import Citation, RagAnswer
 from stores.llm.LLMEnums import DocumentTypeEnum
 from typing import List
 import json
@@ -95,10 +96,28 @@ class NLPController(BaseController):
 
         return results
     
-    async def answer_rag_question(self, project: Project, query: str, limit: int = 10):
-        
-        answer, full_prompt, chat_history = None, None, None
+    QUOTE_MAX_CHARS = 240
 
+    def _build_citation(self, document: RetrievedDocument) -> Citation:
+        metadata = document.metadata or {}
+        return Citation(
+            chunk_id=document.chunk_id,
+            asset_name=metadata.get("source"),
+            doc_type=metadata.get("doc_type"),
+            page=metadata.get("page"),
+            section=metadata.get("section"),
+            score=float(document.score),
+            quote=document.text[: self.QUOTE_MAX_CHARS],
+        )
+
+    def _refusal(self) -> RagAnswer:
+        return RagAnswer(
+            answer=self.template_parser.get("rag", "refusal_message"),
+            citations=[],
+            low_confidence=True,
+        )
+
+    async def answer_rag_question(self, project: Project, query: str, limit: int = 10):
         # step1: retrieve related documents
         retrieved_documents = await self.search_vector_db_collection(
             project=project,
@@ -106,10 +125,19 @@ class NLPController(BaseController):
             limit=limit,
         )
 
-        if not retrieved_documents or len(retrieved_documents) == 0:
-            return answer, full_prompt, chat_history
-        
-        # step2: Construct LLM prompt
+        if not retrieved_documents:
+            return self._refusal()
+
+        # step2: refuse when no retrieval clears the confidence threshold
+        threshold = self.app_settings.MIN_RETRIEVAL_SCORE
+        relevant_documents = [
+            doc for doc in retrieved_documents if float(doc.score) >= threshold
+        ]
+
+        if not relevant_documents:
+            return self._refusal()
+
+        # step3: construct the LLM prompt from the relevant documents
         system_prompt = self.template_parser.get("rag", "system_prompt")
 
         documents_prompts = "\n".join([
@@ -117,14 +145,13 @@ class NLPController(BaseController):
                     "doc_num": idx + 1,
                     "chunk_text": self.generation_client.process_text(doc.text),
             })
-            for idx, doc in enumerate(retrieved_documents)
+            for idx, doc in enumerate(relevant_documents)
         ])
 
         footer_prompt = self.template_parser.get("rag", "footer_prompt", {
             "query": query
         })
 
-        # step3: Construct Generation Client Prompts
         chat_history = [
             self.generation_client.construct_prompt(
                 prompt=system_prompt,
@@ -132,13 +159,19 @@ class NLPController(BaseController):
             )
         ]
 
-        full_prompt = "\n\n".join([ documents_prompts,  footer_prompt])
+        full_prompt = "\n\n".join([ documents_prompts, footer_prompt ])
 
-        # step4: Retrieve the Answer
         answer = self.generation_client.generate_text(
             prompt=full_prompt,
             chat_history=chat_history
         )
 
-        return answer, full_prompt, chat_history
+        if not answer:
+            return self._refusal()
+
+        return RagAnswer(
+            answer=answer,
+            citations=[self._build_citation(doc) for doc in relevant_documents],
+            low_confidence=False,
+        )
 

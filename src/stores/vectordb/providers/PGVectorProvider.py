@@ -7,6 +7,20 @@ from models.db_schemes import RetrievedDocument
 from sqlalchemy.sql import text as sql_text
 import json
 
+def _parse_metadata(value) -> dict:
+    """Metadata is stored as JSONB but may come back as a JSON string."""
+    if not value:
+        return {}
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        try:
+            return json.loads(value)
+        except (ValueError, TypeError):
+            return {}
+    return {}
+
+
 class PGVectorProvider(VectorDBInterface):
 
     def __init__(self, db_client, default_vector_size: int = 786,
@@ -285,12 +299,16 @@ class PGVectorProvider(VectorDBInterface):
         vector = "[" + ",".join([ str(v) for v in vector ]) + "]"
         async with self.db_client() as session:
             async with session.begin():
-                search_sql = sql_text(f'SELECT {PgVectorTableSchemeEnums.TEXT.value} as text, 1 - ({PgVectorTableSchemeEnums.VECTOR.value} <=> :vector) as score'
-                                      f' FROM {collection_name}'
-                                      ' ORDER BY score DESC '
-                                      f'LIMIT {limit}'
-                                      )
-                
+                search_sql = sql_text(
+                    f'SELECT {PgVectorTableSchemeEnums.TEXT.value} as text, '
+                    f'1 - ({PgVectorTableSchemeEnums.VECTOR.value} <=> :vector) as score, '
+                    f'{PgVectorTableSchemeEnums.CHUNK_ID.value} as chunk_id, '
+                    f'{PgVectorTableSchemeEnums.METADATA.value} as doc_metadata '
+                    f'FROM {collection_name}'
+                    ' ORDER BY score DESC '
+                    f'LIMIT {limit}'
+                )
+
                 result = await session.execute(search_sql, {"vector": vector})
 
                 records = result.fetchall()
@@ -298,7 +316,9 @@ class PGVectorProvider(VectorDBInterface):
                 return [
                     RetrievedDocument(
                         text=record.text,
-                        score=record.score
+                        score=float(record.score),
+                        chunk_id=record.chunk_id,
+                        metadata=_parse_metadata(record.doc_metadata),
                     )
                     for record in records
                 ]

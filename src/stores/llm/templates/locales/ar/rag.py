@@ -23,6 +23,11 @@ document_prompt = Template(
     ])
 )
 
+#### Refusal ####
+refusal_message = Template(
+    "لا تتوفر معلومات كافية في المستندات المفهرسة للإجابة عن هذا السؤال."
+)
+
 #### Footer ####
 footer_prompt = Template("\n".join([
     "بناءً فقط على المستندات المذكورة أعلاه، يرجى توليد إجابة للمستخدم.",

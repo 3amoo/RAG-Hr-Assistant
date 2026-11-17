@@ -167,10 +167,15 @@ class QdrantDBProvider(VectorDBInterface):
         if not results:
             return None
 
-        return [
-            RetrievedDocument(
-                score=result.score,
-                text=result.payload.get("text", ""),
+        documents = []
+        for result in results:
+            payload = result.payload or {}
+            documents.append(
+                RetrievedDocument(
+                    score=result.score,
+                    text=payload.get("text", ""),
+                    chunk_id=result.id if isinstance(result.id, int) else None,
+                    metadata=payload.get("metadata") or {},
+                )
             )
-            for result in results
-        ]
+        return documents

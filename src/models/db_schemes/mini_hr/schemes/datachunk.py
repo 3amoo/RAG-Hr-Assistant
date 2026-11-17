@@ -1,4 +1,5 @@
 import uuid
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel
 from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, Text, func
@@ -39,3 +40,5 @@ class DataChunk(SQLAlchemyBase):
 class RetrievedDocument(BaseModel):
     text: str
     score: float
+    chunk_id: Optional[int] = None
+    metadata: Dict[str, Any] = {}

@@ -23,6 +23,11 @@ document_prompt = Template(
     ])
 )
 
+#### Refusal ####
+refusal_message = Template(
+    "I don't have enough relevant information in the indexed documents to answer that question."
+)
+
 #### Footer ####
 footer_prompt = Template("\n".join([
     "Based only on the above documents, please generate an answer for the user.",

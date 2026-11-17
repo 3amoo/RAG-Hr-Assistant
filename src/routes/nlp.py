@@ -115,25 +115,23 @@ async def answer_rag(request: Request, project_id: int, search_request: SearchRe
         template_parser=request.app.template_parser,
     )
 
-    answer, full_prompt, chat_history = await nlp_controller.answer_rag_question(
+    result = await nlp_controller.answer_rag_question(
         project=project,
         query=search_request.text,
         limit=search_request.limit,
     )
 
-    if not answer:
-        return JSONResponse(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                content={
-                    "signal": ResponseSignal.RAG_ANSWER_ERROR.value
-                }
-        )
-    
+    signal = (
+        ResponseSignal.RAG_ANSWER_REFUSED.value
+        if result.low_confidence
+        else ResponseSignal.RAG_ANSWER_SUCCESS.value
+    )
+
     return JSONResponse(
         content={
-            "signal": ResponseSignal.RAG_ANSWER_SUCCESS.value,
-            "answer": answer,
-            "full_prompt": full_prompt,
-            "chat_history": chat_history
+            "signal": signal,
+            "answer": result.answer,
+            "citations": [citation.model_dump() for citation in result.citations],
+            "low_confidence": result.low_confidence,
         }
     )
