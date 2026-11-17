@@ -128,6 +128,11 @@ Then:
 cp .env.example .env
 # edit .env: replace CHANGE_ME values, set API_KEY and add provider keys
 
+# Host-run uvicorn needs the backing services on their published ports
+# (5400/5672/6379). Create the Compose env files as in "Quick start" first,
+# then point src/.env at localhost instead of the Docker service names:
+docker compose -f docker/docker-compose.yml up -d pgvector rabbitmq redis
+
 # From the repository root:
 alembic -c src/models/db_schemes/mini_hr/alembic.ini upgrade head
 

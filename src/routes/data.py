@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Request, UploadFile, status
 from fastapi.responses import JSONResponse
+from kombu.exceptions import OperationalError as BrokerOperationalError
 import os
 from helpers.config import get_settings, Settings
 from helpers.auth import verify_api_key
@@ -16,6 +17,16 @@ from tasks.file_processing import process_project_files
 from tasks.process_workflow import process_and_push_workflow
 
 logger = logging.getLogger('uvicorn.error')
+
+
+def _broker_unavailable_response(error):
+    """Report a broker outage clearly instead of leaking a middleware traceback."""
+    logger.error("Celery broker unavailable: %s", error)
+    return JSONResponse(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={"detail": "Task queue unavailable; check RabbitMQ/Redis and retry."},
+    )
+
 
 data_router = APIRouter(
     prefix="/api/v1/data",
@@ -101,13 +112,16 @@ async def process_endpoint(request: Request, project_id: int, process_request: P
     overlap_size = process_request.overlap_size
     do_reset = process_request.do_reset
 
-    task = process_project_files.delay(
-        project_id=project_id,
-        file_id=process_request.file_id,
-        chunk_size=chunk_size,
-        overlap_size=overlap_size,
-        do_reset=do_reset,
-    )
+    try:
+        task = process_project_files.delay(
+            project_id=project_id,
+            file_id=process_request.file_id,
+            chunk_size=chunk_size,
+            overlap_size=overlap_size,
+            do_reset=do_reset,
+        )
+    except BrokerOperationalError as error:
+        return _broker_unavailable_response(error)
 
     return JSONResponse(
         content={
@@ -123,13 +137,16 @@ async def process_and_push_endpoint(request: Request, project_id: int, process_r
     overlap_size = process_request.overlap_size
     do_reset = process_request.do_reset
 
-    workflow_task = process_and_push_workflow.delay(
-        project_id=project_id,
-        file_id=process_request.file_id,
-        chunk_size=chunk_size,
-        overlap_size=overlap_size,
-        do_reset=do_reset,
-    )
+    try:
+        workflow_task = process_and_push_workflow.delay(
+            project_id=project_id,
+            file_id=process_request.file_id,
+            chunk_size=chunk_size,
+            overlap_size=overlap_size,
+            do_reset=do_reset,
+        )
+    except BrokerOperationalError as error:
+        return _broker_unavailable_response(error)
 
     return JSONResponse(
         content={
