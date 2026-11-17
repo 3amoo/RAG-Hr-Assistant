@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import JSONResponse
+from helpers.auth import verify_api_key
 from routes.schemes.nlp import PushRequest, SearchRequest
 from models.ProjectModel import ProjectModel
 from controllers import NLPController
@@ -13,6 +14,7 @@ logger = logging.getLogger('uvicorn.error')
 nlp_router = APIRouter(
     prefix="/api/v1/nlp",
     tags=["api_v1", "nlp"],
+    dependencies=[Depends(verify_api_key)],
 )
 
 @nlp_router.post("/index/push/{project_id}")

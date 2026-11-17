@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Request, UploadFile, status
 from fastapi.responses import JSONResponse
 import os
 from helpers.config import get_settings, Settings
+from helpers.auth import verify_api_key
 from controllers import DataController, ProjectController
 import aiofiles
 from models import ResponseSignal
@@ -19,6 +20,7 @@ logger = logging.getLogger('uvicorn.error')
 data_router = APIRouter(
     prefix="/api/v1/data",
     tags=["api_v1", "data"],
+    dependencies=[Depends(verify_api_key)],
 )
 
 @data_router.post("/upload/{project_id}")
