@@ -4,19 +4,6 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from routes import base, data, nlp
-
-try:
-    from routes import hr
-except ImportError:
-    print("Warning: HR routes not yet implemented")
-    hr = None
-
-try:
-    from routes import screening
-except ImportError:
-    print("Warning: Screening routes not yet implemented")
-    screening = None
-
 from helpers.config import get_settings
 from stores.llm.LLMProviderFactory import LLMProviderFactory
 from stores.vectordb.VectorDBProviderFactory import VectorDBProviderFactory
@@ -76,12 +63,6 @@ app.on_event("shutdown")(shutdown_span)
 app.include_router(base.base_router)
 app.include_router(data.data_router)
 app.include_router(nlp.nlp_router)
-
-if hr:
-    app.include_router(hr.hr_router)
-
-if screening:
-    app.include_router(screening.screening_router)
 
 # Local UI (plain HTML/JS, no build step). The page itself is public; API
 # calls still require the configured X-API-Key.
