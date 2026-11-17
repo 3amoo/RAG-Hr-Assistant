@@ -60,30 +60,19 @@ async def _process_project_files(task_instance, project_id: int, file_id: str,
             "do_reset": do_reset,
         }
 
-        should_execute, existing_task = await idempotency_manager.should_execute_task(
+        task_record, claimed = await idempotency_manager.claim_task(
             task_name=task_name,
             task_args=task_args,
             celery_task_id=task_instance.request.id,
             task_time_limit=settings.CELERY_TASK_TIME_LIMIT,
         )
 
-        if not should_execute:
-            logger.warning("Skipping duplicate task | status: %s", existing_task.status)
-            return existing_task.result
-
-        if existing_task:
-            task_record = existing_task
-            await idempotency_manager.update_task_status(
-                execution_id=task_record.execution_id,
-                status="PENDING",
-                celery_task_id=task_instance.request.id,
+        if not claimed:
+            logger.warning(
+                "Skipping duplicate task | existing status: %s",
+                task_record.status if task_record else "unknown",
             )
-        else:
-            task_record = await idempotency_manager.create_task_record(
-                task_name=task_name,
-                task_args=task_args,
-                celery_task_id=task_instance.request.id,
-            )
+            return task_record.result if task_record else None
 
         await idempotency_manager.update_task_status(
             execution_id=task_record.execution_id, status="STARTED"

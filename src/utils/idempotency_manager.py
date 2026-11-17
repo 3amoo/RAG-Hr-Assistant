@@ -2,7 +2,8 @@ import hashlib
 import json
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import delete, select
+from sqlalchemy import and_, delete, func, select, update
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from models.db_schemes.mini_hr.schemes.celery_task_execution import CeleryTaskExecution
 
@@ -21,26 +22,109 @@ class IdempotencyManager:
         json_string = json.dumps(combined_data, sort_keys=True, default=str)
         return hashlib.sha256(json_string.encode()).hexdigest()
 
-    async def create_task_record(self, task_name: str, task_args: dict,
-                                 celery_task_id: str = None) -> CeleryTaskExecution:
-        """Create a new task execution record."""
-        args_hash = self.create_args_hash(task_name, task_args)
+    @staticmethod
+    def _retry_condition(existing, now, task_time_limit):
+        """Build a guarded WHERE clause for taking over an existing task.
 
-        task_record = CeleryTaskExecution(
-            task_name=task_name,
-            task_args_hash=args_hash,
-            task_args=task_args,
-            celery_task_id=celery_task_id,
-            status="PENDING",
-            started_at=datetime.now(timezone.utc),
-        )
+        The guard always includes the row's current status (and its old
+        ``started_at`` for stale running tasks), so only one worker can claim a
+        retry. Return ``None`` when the task must not be retried.
+        """
+        if existing.status == "SUCCESS":
+            return None
+
+        if existing.status in ("PENDING", "STARTED", "RETRY"):
+            started_at = existing.started_at or existing.created_at
+            if started_at is None:
+                return None
+            if started_at.tzinfo is None:
+                started_at = started_at.replace(tzinfo=timezone.utc)
+            stale_before = now - timedelta(seconds=task_time_limit + 60)
+            if started_at > stale_before:
+                return None
+            return and_(
+                CeleryTaskExecution.status == existing.status,
+                func.coalesce(
+                    CeleryTaskExecution.started_at, CeleryTaskExecution.created_at
+                ) <= stale_before,
+            )
+
+        # FAILURE or any other terminal state can be retried safely.
+        return CeleryTaskExecution.status == existing.status
+
+    async def claim_task(self, task_name: str, task_args: dict,
+                         celery_task_id: str = None,
+                         task_time_limit: int = 600):
+        """Atomically claim one execution for ``(task_name, task_args)``.
+
+        Returns ``(record, claimed)``. Exactly one concurrent worker receives
+        ``claimed=True``; every other worker gets the winning row back and
+        should skip execution. This replaces the old check-then-insert flow,
+        which raced when the queue held the same task more than once.
+        """
+        args_hash = self.create_args_hash(task_name, task_args)
+        now = datetime.now(timezone.utc)
 
         async with self.db_client() as session:
-            session.add(task_record)
-            await session.commit()
-            await session.refresh(task_record)
+            insert_stmt = (
+                pg_insert(CeleryTaskExecution)
+                .values(
+                    task_name=task_name,
+                    task_args_hash=args_hash,
+                    task_args=task_args,
+                    celery_task_id=celery_task_id,
+                    status="PENDING",
+                    started_at=now,
+                )
+                .on_conflict_do_nothing(
+                    index_elements=["task_name", "task_args_hash"]
+                )
+                .returning(CeleryTaskExecution)
+            )
+            record = (await session.execute(insert_stmt)).scalar_one_or_none()
+            if record is not None:
+                await session.commit()
+                return record, True
 
-        return task_record
+            # Another worker recorded this task first. Take over only a failed
+            # or stale attempt, using a guarded UPDATE so two workers cannot
+            # both claim the same retry.
+            existing = (
+                await session.execute(
+                    select(CeleryTaskExecution).where(
+                        CeleryTaskExecution.task_name == task_name,
+                        CeleryTaskExecution.task_args_hash == args_hash,
+                    )
+                )
+            ).scalar_one_or_none()
+
+            if existing is None:
+                return None, False
+
+            # Do not call rollback() here: it expires ``existing`` and the
+            # caller needs its loaded attributes after the session closes.
+            condition = self._retry_condition(existing, now, task_time_limit)
+            if condition is None:
+                return existing, False
+
+            update_stmt = (
+                update(CeleryTaskExecution)
+                .where(CeleryTaskExecution.execution_id == existing.execution_id)
+                .where(condition)
+                .values(
+                    status="PENDING",
+                    celery_task_id=celery_task_id,
+                    started_at=now,
+                    completed_at=None,
+                    result=None,
+                )
+                .returning(CeleryTaskExecution)
+            )
+            claimed = (await session.execute(update_stmt)).scalar_one_or_none()
+            await session.commit()
+            if claimed is None:
+                return existing, False
+            return claimed, True
 
     async def update_task_status(self, execution_id: int, status: str,
                                  result: dict = None, celery_task_id: str = None):
@@ -56,60 +140,6 @@ class IdempotencyManager:
                 if status in ("SUCCESS", "FAILURE"):
                     task_record.completed_at = datetime.now(timezone.utc)
                 await session.commit()
-
-    async def get_existing_task(self, task_name: str, task_args: dict,
-                                celery_task_id: str = None) -> CeleryTaskExecution:
-        """Find the latest execution with the same name and arguments.
-
-        The Celery task id is intentionally *not* part of the lookup: a retried
-        or re-submitted task gets a new id, but it must still be deduplicated by
-        its arguments.
-        """
-        args_hash = self.create_args_hash(task_name, task_args)
-
-        async with self.db_client() as session:
-            stmt = (
-                select(CeleryTaskExecution)
-                .where(
-                    CeleryTaskExecution.task_name == task_name,
-                    CeleryTaskExecution.task_args_hash == args_hash,
-                )
-                .order_by(CeleryTaskExecution.created_at.desc())
-                .limit(1)
-            )
-            result = await session.execute(stmt)
-            return result.scalar_one_or_none()
-
-    async def should_execute_task(self, task_name: str, task_args: dict,
-                                  celery_task_id: str = None,
-                                  task_time_limit: int = 600):
-        """Decide whether a task should run.
-
-        Returns ``(should_execute, existing_task_or_none)``.
-        """
-        existing_task = await self.get_existing_task(
-            task_name, task_args, celery_task_id
-        )
-
-        if not existing_task:
-            return True, None
-
-        if existing_task.status == "SUCCESS":
-            return False, existing_task
-
-        if existing_task.status in ("PENDING", "STARTED", "RETRY"):
-            if existing_task.started_at:
-                started_at = existing_task.started_at
-                if started_at.tzinfo is None:
-                    started_at = started_at.replace(tzinfo=timezone.utc)
-                time_elapsed = (
-                    datetime.now(timezone.utc) - started_at
-                ).total_seconds()
-                if time_elapsed > (task_time_limit + 60):
-                    return True, existing_task
-            return False, existing_task
-
-        return True, existing_task
 
     async def cleanup_old_tasks(self, time_retention: int = 86400) -> int:
         """Delete task records older than ``time_retention`` seconds."""
