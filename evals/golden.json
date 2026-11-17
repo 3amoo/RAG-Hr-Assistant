@@ -1,0 +1,77 @@
+[
+  {
+    "question": "How many days of annual leave are employees entitled to?",
+    "expected_source": "leave_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "How much advance notice is required to request annual leave?",
+    "expected_source": "leave_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "What is the maximum number of leave days that can be carried forward?",
+    "expected_source": "leave_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "How many weeks of paid parental leave are available?",
+    "expected_source": "parental_leave_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "Can employees request a phased return after parental leave?",
+    "expected_source": "parental_leave_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "How many days per week can employees work remotely?",
+    "expected_source": "remote_work_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "What are the core collaboration hours for remote work?",
+    "expected_source": "remote_work_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "What is the meal reimbursement limit for business travel?",
+    "expected_source": "expense_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "Within how many days must an expense claim be submitted?",
+    "expected_source": "expense_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "What authentication is required for company systems?",
+    "expected_source": "security_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "How quickly must a security incident be reported?",
+    "expected_source": "security_policy.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "Where should concerns about conduct be reported?",
+    "expected_source": "code_of_conduct.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "ما مدة الإجازة الوالدية المدفوعة؟",
+    "expected_source": "parental_leave_policy_ar.txt",
+    "expected_refusal": false
+  },
+  {
+    "question": "What is the policy on cryptocurrency bonuses?",
+    "expected_source": null,
+    "expected_refusal": true
+  },
+  {
+    "question": "ما هي سياسة الشركة بشأن العملة الرقمية؟",
+    "expected_source": null,
+    "expected_refusal": true
+  }
+]
