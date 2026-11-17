@@ -12,6 +12,12 @@ def test_root_redirects_to_ui():
     assert response.headers["location"] == "/ui/"
 
 
+def test_health_probe_is_public_and_ok():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
 def test_ui_page_is_self_contained():
     response = client.get("/ui/")
     assert response.status_code == 200

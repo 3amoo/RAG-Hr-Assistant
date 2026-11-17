@@ -36,6 +36,7 @@ All functional routes are under `/api/v1`. `GET /` redirects to the local UI.
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/v1/` | App name and version (unauthenticated health check) |
+| `GET` | `/health` | Liveness probe returning `{"status": "ok"}` (unauthenticated) |
 | `POST` | `/api/v1/data/upload/{project_id}` | Upload a document |
 | `POST` | `/api/v1/data/process/{project_id}` | Chunk uploaded documents (Celery task) |
 | `POST` | `/api/v1/data/process-and-push/{project_id}` | Chunk and index in one workflow |
@@ -44,7 +45,7 @@ All functional routes are under `/api/v1`. `GET /` redirects to the local UI.
 | `POST` | `/api/v1/nlp/index/search/{project_id}` | Semantic search |
 | `POST` | `/api/v1/nlp/index/answer/{project_id}` | Cited RAG answer |
 
-Except for the health check, endpoints require the `X-API-Key` header when
+Except for the health checks, endpoints require the `X-API-Key` header when
 `API_KEY` is configured. Interactive docs: <http://localhost:8000/docs>.
 
 The answer endpoint returns:

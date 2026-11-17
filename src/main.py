@@ -81,6 +81,12 @@ ui_dir = Path(__file__).resolve().parent / "ui"
 app.mount("/ui", StaticFiles(directory=ui_dir, html=True), name="ui")
 
 
+@app.get("/health", include_in_schema=False)
+def health():
+    """Unauthenticated liveness probe for local monitors and proxies."""
+    return {"status": "ok"}
+
+
 @app.get("/", include_in_schema=False)
 def root():
     return RedirectResponse(url="/ui/")
