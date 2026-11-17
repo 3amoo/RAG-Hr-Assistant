@@ -5,4 +5,5 @@ from models.db_schemes.mini_hr.schemes import (
     DataChunk,
     RetrievedDocument,
     CeleryTaskExecution,
+    Department,
 )
