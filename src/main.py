@@ -1,4 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from routes import base, data, nlp
 
 try:
@@ -78,3 +82,13 @@ if hr:
 
 if screening:
     app.include_router(screening.screening_router)
+
+# Local UI (plain HTML/JS, no build step). The page itself is public; API
+# calls still require the configured X-API-Key.
+ui_dir = Path(__file__).resolve().parent / "ui"
+app.mount("/ui", StaticFiles(directory=ui_dir, html=True), name="ui")
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/ui/")

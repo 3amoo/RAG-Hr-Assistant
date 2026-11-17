@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG-Hr-Assistant — Policy copilot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>RAG-Hr-Assistant</h1>
+    <p class="subtitle">Local HR policy copilot. Answers come only from indexed documents.</p>
+
+    <section class="card">
+      <div class="row">
+        <label>API key
+          <input id="api-key" type="password" placeholder="X-API-Key" autocomplete="off">
+        </label>
+        <label>Project ID
+          <input id="project-id" type="number" value="1" min="1">
+        </label>
+      </div>
+
+      <label for="question">Question</label>
+      <textarea id="question" rows="3" placeholder="How many days of annual leave do employees get?"></textarea>
+
+      <div class="actions">
+        <button id="ask">Ask</button>
+        <span id="status" role="status"></span>
+      </div>
+    </section>
+
+    <section id="result" class="card hidden">
+      <div class="result-head">
+        <h2>Answer</h2>
+        <span id="confidence" class="badge"></span>
+      </div>
+      <p id="answer"></p>
+
+      <h3>Citations</h3>
+      <div id="citations"></div>
+    </section>
+
+    <section id="error" class="card error hidden"></section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
