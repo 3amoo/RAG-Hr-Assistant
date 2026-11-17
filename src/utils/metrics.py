@@ -24,13 +24,13 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
 
         return response
     
-def setup_metrics(app: FastAPI):
+def setup_metrics(app: FastAPI, metrics_path: str = "/metrics"):
     """
     Setup Prometheus metrics middleware and endpoint
     """
     # Add Prometheus middleware
     app.add_middleware(PrometheusMiddleware)
 
-    @app.get("/metrics", include_in_schema=False)
+    @app.get(metrics_path, include_in_schema=False)
     def metrics():
         return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)

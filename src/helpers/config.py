@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     APP_NAME: str
     APP_VERSION: str
 
+    # Single shared key for the local API. Empty disables auth for local dev.
+    API_KEY: str = ""
+    METRICS_PATH: str = "/metrics"
+
     FILE_ALLOWED_TYPES: list
     FILE_MAX_SIZE: int
     FILE_DEFAULT_CHUNK_SIZE: int
@@ -49,6 +53,9 @@ class Settings(BaseSettings):
     PRIMARY_LANG: str = "en"
     DEFAULT_LANG: str = "en"
 
+    # Retrievals scoring below this are treated as low-confidence and refused.
+    MIN_RETRIEVAL_SCORE: float = 0.25
+
     # Celery configuration
     CELERY_BROKER_URL: str = ""
     CELERY_RESULT_BACKEND: str = ""
@@ -57,6 +64,7 @@ class Settings(BaseSettings):
     CELERY_TASK_ACKS_LATE: bool = True
     CELERY_WORKER_CONCURRENCY: int = 2
     CELERY_FLOWER_PASSWORD: str = ""
+    FLOWER_AUTH_USER: str = "admin"
 
 
 @lru_cache

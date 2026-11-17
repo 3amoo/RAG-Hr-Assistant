@@ -26,7 +26,7 @@ from utils.metrics import setup_metrics
 app = FastAPI()
 
 # Setup Prometheus metrics
-setup_metrics(app)
+setup_metrics(app, metrics_path=get_settings().METRICS_PATH)
 
 async def startup_span():
     settings = get_settings()

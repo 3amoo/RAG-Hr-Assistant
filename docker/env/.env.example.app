@@ -1,6 +1,11 @@
 APP_NAME="RAG-Hr-Assistant"
 APP_VERSION="0.1"
 
+# ========================= Security Config =========================
+# Shared API key for local use. Leave empty only for trusted local development.
+API_KEY="CHANGE_ME"
+METRICS_PATH="/metrics"
+
 FILE_ALLOWED_TYPES=["text/plain", "application/pdf"]
 FILE_MAX_SIZE=10
 FILE_DEFAULT_CHUNK_SIZE=512000
@@ -43,6 +48,10 @@ QDRANT_API_KEY=""
 PRIMARY_LANG="en"
 DEFAULT_LANG="en"
 
+# ========================= Retrieval Config =========================
+# Answers are refused when the best retrieval score is below this value.
+MIN_RETRIEVAL_SCORE=0.25
+
 # ========================= Celery Task Queue Config =========================
 CELERY_BROKER_URL="amqp://CHANGE_ME_USER:CHANGE_ME@rabbitmq:5672/CHANGE_ME_VHOST"
 CELERY_RESULT_BACKEND="redis://:CHANGE_ME@redis:6379/0"
@@ -51,3 +60,4 @@ CELERY_TASK_TIME_LIMIT=600
 CELERY_TASK_ACKS_LATE=false
 CELERY_WORKER_CONCURRENCY=2
 CELERY_FLOWER_PASSWORD="CHANGE_ME"
+FLOWER_AUTH_USER="admin"
