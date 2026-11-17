@@ -18,6 +18,10 @@ build/
 .DS_Store
 Thumbs.db
 
+# Internal planning documents
+PLAN.md
+PRODUCTION_PLAN.md
+
 # Environment and local secrets
 .env
 .env.*
@@ -35,6 +39,9 @@ celerybeat/
 *.log
 *.log.*
 logs/
+
+# Local agent tooling (kept locally, not published)
+AGENTS.md
 
 # Local tooling config with machine-specific endpoints
 opencode.jsonc

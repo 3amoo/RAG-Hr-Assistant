@@ -158,7 +158,7 @@ variables), because settings are loaded at import time.
 - `PyMuPDF==1.27.2` and `cohere==7.3.1` are the first versions that work on
   Python 3.14 in this project.
 - Do not add packages without checking that a wheel exists for Python 3.10 and
-  3.14. See [AGENTS.md](AGENTS.md) for the project rules.
+  3.14.
 
 ## The course
 
