@@ -1,4 +1,4 @@
-# mini-hr
+# RAG-Hr-Assistant
 
 A small HR assistant built on Retrieval-Augmented Generation (RAG). It ingests
 company documents (PDF/TXT), splits them into overlapping chunks, stores them in
@@ -167,5 +167,5 @@ an Arabic video series (list coming soon).
 
 ---
 
-Part of the mini-* series: **mini-rag** (document Q&A) · **mini-hr** (HR
+Part of the mini-* series: **mini-rag** (document Q&A) · **RAG-Hr-Assistant** (HR
 assistant).

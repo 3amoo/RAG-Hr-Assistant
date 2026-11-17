@@ -1,4 +1,4 @@
-APP_NAME="mini-HR"
+APP_NAME="RAG-Hr-Assistant"
 APP_VERSION="0.1"
 
 FILE_ALLOWED_TYPES=["text/plain", "application/pdf"]

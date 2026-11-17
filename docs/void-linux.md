@@ -1,4 +1,4 @@
-# Running mini-hr natively on Void Linux
+# Running RAG-Hr-Assistant natively on Void Linux
 
 This guide targets Void Linux with the distribution Python 3.14 and a native
 (runit-managed) PostgreSQL + Redis setup. Docker is still the easiest way to run

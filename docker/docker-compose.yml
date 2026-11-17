@@ -96,7 +96,7 @@ services:
     restart: always
 
 
-  # PostgreSQL (pgvector) - MiniHR Database
+  # PostgreSQL (pgvector) - RAG-Hr-Assistant Database
   pgvector:
     image: pgvector/pgvector:0.8.0-pg17
     container_name: minihr-db
