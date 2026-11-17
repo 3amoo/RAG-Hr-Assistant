@@ -1,0 +1,35 @@
+.git
+.gitignore
+AGENTS.md
+README.md
+PLAN.md
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+docker/env/.env
+docker/env/.env.*
+!docker/env/.env.example.*
+
+# Python caches and virtual environments
+**/__pycache__/
+**/*.py[cod]
+**/*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Runtime data
+assets/
+src/assets/
+qdrant_db/
+celerybeat/
+*.log
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo

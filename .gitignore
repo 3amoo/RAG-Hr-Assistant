@@ -1,0 +1,98 @@
+.aider*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+docker/env/.env
+docker/env/.env.*
+!docker/env/.env.example.*
+
+# Runtime data
+src/assets/
+assets/files/
+assets/database/
+qdrant_db/
+celerybeat/
+*.log
+*.log.*
+logs/
+
+# Local tooling config with machine-specific endpoints
+opencode.jsonc
+
+# Uploaded documents and user data
+/assets/
+uploads/
+storage/
+media/
+*.pdf
+
+# Database dumps and data directories
+*.sql
+*.dump
+*.db
+*.sqlite
+*.sqlite3
+pgdata/
+postgres_data/
+pgvector_data/
+
+# Vector DB / Celery / Beat runtime state
+qdrant/
+qdrant_storage/
+celerybeat-schedule
+celerybeat-schedule.*
+*.pid
+
+# Caches, coverage and test artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Local secrets, keys and credentials
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+.git-credentials
+.netrc
+.npmrc
+.pypirc
+credentials.json
+service-account*.json
+
