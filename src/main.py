@@ -1,3 +1,14 @@
+import warnings
+
+# openai 1.75 imports pydantic.v1, whose compatibility shim warns on Python
+# 3.14+. The API calls used here work fine; silence only that upstream warning
+# so a normal uvicorn start stays readable.
+warnings.filterwarnings(
+    "ignore",
+    message="Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.",
+    category=UserWarning,
+)
+
 from pathlib import Path
 
 from fastapi import FastAPI
