@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = ""
     OPENAI_API_URL: str = ""
     COHERE_API_KEY: str = ""
+    GEMINI_API_KEY: str = ""
 
     GENERATION_MODEL_ID_LITERAL: List[str] = []
     GENERATION_MODEL_ID: str = ""

@@ -13,7 +13,8 @@ questions that are answered from the indexed content using OpenAI or Cohere.
 
 - Per-project document upload (PDF/TXT) with type and size validation.
 - Overlap-aware chunking that preserves `source` and `page` metadata.
-- Embeddings through OpenAI or Cohere, selected by a provider factory.
+- Embeddings and generation through OpenAI, Cohere, or Google Gemini, selected
+  by a provider factory.
 - Vector storage in PostgreSQL + pgvector (default) or Qdrant. Collections are
   named `vectors_<embedding_size>_<project_id>` for both backends.
 - Semantic search and RAG answers with English and Arabic prompt templates.
@@ -164,7 +165,8 @@ Key settings:
 - `API_KEY`: shared key required on data/NLP routes. Empty disables auth for
   trusted local development only.
 - `METRICS_PATH`: Prometheus endpoint path (default `/metrics`).
-- `GENERATION_BACKEND` / `EMBEDDING_BACKEND`: `OPENAI` or `COHERE`.
+- `GENERATION_BACKEND` / `EMBEDDING_BACKEND`: `OPENAI`, `COHERE`, or `GEMINI`.
+  `GEMINI_API_KEY` is required when either backend is `GEMINI`.
 - `VECTOR_DB_BACKEND`: `PGVECTOR` or `QDRANT`.
 - `POSTGRES_*`: relational database connection.
 - `MIN_RETRIEVAL_SCORE`: lowest accepted cosine similarity (default `0.25`).
@@ -182,7 +184,7 @@ src/
   routes/schemes/         Request schemas
   controllers/            Upload, chunking, RAG orchestration
   models/                 SQLAlchemy models, DAOs, answer/citation models
-  stores/llm/             OpenAI/Cohere providers and prompt templates
+  stores/llm/             OpenAI/Cohere/Gemini providers and prompt templates
   stores/vectordb/        Qdrant and pgvector providers
   tasks/                  Celery tasks
   utils/                  Metrics and idempotency helpers

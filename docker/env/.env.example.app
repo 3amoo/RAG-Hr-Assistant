@@ -18,12 +18,14 @@ POSTGRES_PORT=5432
 POSTGRES_MAIN_DATABASE="minihr"
 
 # ========================= LLM Config =========================
+# Choose OPENAI, COHERE, or GEMINI for either backend.
 GENERATION_BACKEND="OPENAI"
 EMBEDDING_BACKEND="COHERE"
 
 OPENAI_API_KEY="sk-your-openai-key"
 OPENAI_API_URL=""
 COHERE_API_KEY="your-cohere-key"
+GEMINI_API_KEY="your-gemini-key"
 
 GENERATION_MODEL_ID_LITERAL=["gpt-4o-mini", "gpt-4o"]
 GENERATION_MODEL_ID="gpt-4o-mini"

@@ -145,7 +145,7 @@ CELERY_BROKER_URL="redis://:CHANGE_ME@localhost:6379/0"
 CELERY_RESULT_BACKEND="redis://:CHANGE_ME@localhost:6379/0"
 ```
 
-Add your `OPENAI_API_KEY` and/or `COHERE_API_KEY` as needed.
+Add your `OPENAI_API_KEY`, `COHERE_API_KEY`, and/or `GEMINI_API_KEY` as needed.
 
 ### Qdrant: server vs local mode
 
