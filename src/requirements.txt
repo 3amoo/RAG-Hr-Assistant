@@ -32,3 +32,8 @@ celery==5.5.3
 redis==6.2.0
 flower==2.0.1
 tqdm==4.67.1
+
+# Testing (offline, no external services required)
+pytest==9.2.0
+pytest-asyncio==1.5.0
+httpx==0.28.1
