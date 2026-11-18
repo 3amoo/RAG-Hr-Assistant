@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import asyncio
 import logging
 
@@ -8,6 +12,14 @@ from controllers import NLPController
 from models import ResponseSignal
 from models.ChunkModel import ChunkModel
 from models.ProjectModel import ProjectModel
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - index_data_content — Celery task entrypoint for vector indexing
+# - _index_data_content — claim and execute indexing idempotently
+# ======================================================
 
 logger = logging.getLogger(__name__)
 

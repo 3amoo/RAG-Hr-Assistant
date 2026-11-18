@@ -1,5 +1,16 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from pydantic import BaseModel
 from typing import Optional
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - ProcessRequest — request schema for processing jobs
+# ======================================================
 
 class ProcessRequest(BaseModel):
     file_id: str = None

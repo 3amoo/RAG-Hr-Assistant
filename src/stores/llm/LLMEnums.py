@@ -1,4 +1,19 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from enum import Enum
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - LLMEnums — supported generation/embedding backends
+# - OpenAIEnums — OpenAI-compatible message roles
+# - CoHereEnums — Cohere roles and retrieval task types
+# - GeminiEnums — Gemini user/model/system roles
+# - DocumentTypeEnum — document vs query embedding types
+# ======================================================
 
 class LLMEnums(Enum):
     OPENAI = "OPENAI"

@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import hashlib
 import json
 from datetime import datetime, timedelta, timezone
@@ -7,6 +11,18 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from models.db_schemes.mini_hr.schemes.celery_task_execution import CeleryTaskExecution
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - IdempotencyManager — atomic task claims backed by Postgres
+#   - __init__ — initialize instance state and dependencies
+#   - create_args_hash — hash task name and arguments for dedupe
+#   - _retry_condition — guarded SQL for taking over stale tasks
+#   - claim_task — atomically claim one task execution
+#   - update_task_status — update task status and Celery id
+#   - cleanup_old_tasks — delete claims older than retention window
+# ======================================================
 
 class IdempotencyManager:
 

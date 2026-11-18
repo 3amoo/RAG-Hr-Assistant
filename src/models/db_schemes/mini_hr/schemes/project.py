@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import uuid
 
 from sqlalchemy import Column, DateTime, Integer, func
@@ -6,6 +10,12 @@ from sqlalchemy.orm import relationship
 
 from .mini_hr_base import SQLAlchemyBase
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - Project — SQLAlchemy model for projects
+# ======================================================
 
 class Project(SQLAlchemyBase):
 

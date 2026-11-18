@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import uuid
 from typing import Any, Dict, Optional
 
@@ -8,6 +12,13 @@ from sqlalchemy.orm import relationship
 
 from .mini_hr_base import SQLAlchemyBase
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - DataChunk — SQLAlchemy model for indexed text chunks
+# - RetrievedDocument — search result with metadata and score
+# ======================================================
 
 class DataChunk(SQLAlchemyBase):
 

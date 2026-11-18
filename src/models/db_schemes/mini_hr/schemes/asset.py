@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import uuid
 
 from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String, func
@@ -6,6 +10,12 @@ from sqlalchemy.orm import relationship
 
 from .mini_hr_base import SQLAlchemyBase
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - Asset — SQLAlchemy model for uploaded files
+# ======================================================
 
 class Asset(SQLAlchemyBase):
 

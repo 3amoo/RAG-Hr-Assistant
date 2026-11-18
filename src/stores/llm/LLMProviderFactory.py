@@ -1,6 +1,19 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 
 from .LLMEnums import LLMEnums
 from .providers import OpenAIProvider, CoHereProvider, GeminiProvider
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - LLMProviderFactory — instantiate the configured LLM provider
+#   - __init__ — initialize instance state and dependencies
+#   - create — build a provider instance from settings
+# ======================================================
 
 class LLMProviderFactory:
     def __init__(self, config: dict):

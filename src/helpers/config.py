@@ -1,8 +1,19 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from functools import lru_cache
 from typing import List
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - Settings — typed application configuration from env
+# - get_settings — return the cached Settings instance
+# ======================================================
 
 class Settings(BaseSettings):
 

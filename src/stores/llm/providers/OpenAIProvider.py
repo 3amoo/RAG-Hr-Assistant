@@ -1,8 +1,26 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from ..LLMInterface import LLMInterface
 from ..LLMEnums import OpenAIEnums
 from openai import OpenAI
 import logging
 from typing import List, Union
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - OpenAIProvider — OpenAI-compatible implementation of LLMInterface
+#   - __init__ — initialize instance state and dependencies
+#   - set_generation_model — select the generation model id
+#   - set_embedding_model — select the embedding model and size
+#   - process_text — truncate and trim text to configured limit
+#   - generate_text — generate a grounded text response
+#   - embed_text — embed one or more text inputs
+#   - construct_prompt — build a provider-specific message dict
+# ======================================================
 
 class OpenAIProvider(LLMInterface):
 

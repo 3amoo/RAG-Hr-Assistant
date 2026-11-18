@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import os
 from dataclasses import dataclass, field
 from typing import List
@@ -6,6 +10,19 @@ from models import ProcessingEnum
 
 from .BaseController import BaseController
 from .ProjectController import ProjectController
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - Document — in-memory representation of a processed document
+# - ProcessController — convert uploaded files into clean text chunks
+#   - __init__ — initialize instance state and dependencies
+#   - get_file_extension — normalize the file extension
+#   - get_file_content — read text from PDF or TXT files
+#   - process_file_content — split raw text into overlapping chunks
+#   - process_simpler_splitter — fallback character-based text splitter
+# ======================================================
 
 try:  # PyMuPDF >= 1.24 exposes the `pymupdf` module name
     import pymupdf

@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import logging
 from typing import List, Union
 
@@ -7,6 +11,20 @@ from google.genai import types
 from ..LLMInterface import LLMInterface
 from ..LLMEnums import DocumentTypeEnum, GeminiEnums
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - GeminiProvider — Google Gemini implementation of LLMInterface
+#   - __init__ — initialize instance state and dependencies
+#   - set_generation_model — select the generation model id
+#   - set_embedding_model — select the embedding model and size
+#   - process_text — truncate and trim text to configured limit
+#   - _message_text — extract text from prompt dicts
+#   - generate_text — generate a grounded text response
+#   - embed_text — embed one or more text inputs
+#   - construct_prompt — build a provider-specific message dict
+# ======================================================
 
 class GeminiProvider(LLMInterface):
 

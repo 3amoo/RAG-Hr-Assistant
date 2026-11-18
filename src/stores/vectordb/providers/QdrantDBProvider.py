@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import logging
 from typing import List
 
@@ -8,6 +12,23 @@ from models.db_schemes import RetrievedDocument
 from ..VectorDBEnums import DistanceMethodEnums
 from ..VectorDBInterface import VectorDBInterface
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - QdrantDBProvider — Qdrant implementation of VectorDBInterface
+#   - __init__ — initialize instance state and dependencies
+#   - connect — open the vector store connection
+#   - disconnect — close the vector store connection
+#   - is_collection_existed — check whether a collection exists
+#   - list_all_collections — list available collections
+#   - get_collection_info — handle get collection info
+#   - delete_collection — drop a collection
+#   - create_collection — create a collection with the configured distance
+#   - insert_one — insert a single vector record
+#   - insert_many — bulk insert vector records
+#   - search_by_vector — query the collection by vector similarity
+# ======================================================
 
 class QdrantDBProvider(VectorDBInterface):
 

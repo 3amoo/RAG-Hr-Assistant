@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import hmac
 
 from fastapi import Depends, HTTPException, Security, status
@@ -5,6 +9,12 @@ from fastapi.security import APIKeyHeader
 
 from helpers.config import get_settings
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - verify_api_key — validate the shared X-API-Key header
+# ======================================================
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 

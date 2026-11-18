@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import JSONResponse
 from helpers.auth import verify_api_key
@@ -8,6 +12,16 @@ from models import ResponseSignal
 from tasks.data_indexing import index_data_content
 
 import logging
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - index_project — queue vector indexing for a project
+# - get_project_index_info — return collection info for a project
+# - search_index — run semantic search over a project index
+# - answer_rag — answer a question with grounded citations
+# ======================================================
 
 logger = logging.getLogger('uvicorn.error')
 

@@ -1,4 +1,18 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import os
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - TemplateParser — load and resolve localized prompt templates
+#   - __init__ — initialize instance state and dependencies
+#   - set_language — switch the active prompt language
+#   - get — render a named template with variables
+# ======================================================
 
 class TemplateParser:
 

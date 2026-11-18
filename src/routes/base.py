@@ -1,8 +1,19 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from fastapi import FastAPI, APIRouter, Depends
 import os
 from helpers.config import get_settings, Settings
 from time import sleep
 import logging
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - welcome — simple welcome endpoint
+# ======================================================
 
 logger = logging.getLogger('uvicorn.error')
 

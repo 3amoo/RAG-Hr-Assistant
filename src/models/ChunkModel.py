@@ -1,9 +1,27 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from sqlalchemy import delete, func
 from sqlalchemy.future import select
 
 from .BaseDataModel import BaseDataModel
 from .db_schemes import DataChunk
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - ChunkModel — data access for document chunks
+#   - __init__ — initialize instance state and dependencies
+#   - create_instance — build a DAO bound to the current DB session
+#   - create_chunk — persist a single text chunk
+#   - get_chunk — fetch one chunk by id
+#   - insert_many_chunks — bulk insert chunks for a project
+#   - delete_chunks_by_project_id — remove all chunks for a project
+#   - get_project_chunks — list chunks for a project
+#   - get_total_chunks_count — count stored chunks for a project
+# ======================================================
 
 class ChunkModel(BaseDataModel):
 

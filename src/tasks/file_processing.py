@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import asyncio
 import logging
 
@@ -11,6 +15,14 @@ from models.ProjectModel import ProjectModel
 from models.db_schemes import DataChunk
 from models.enums.AssetTypeEnum import AssetTypeEnum
 from utils.idempotency_manager import IdempotencyManager
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - process_project_files — Celery task entrypoint for file processing
+# - _process_project_files — claim and execute processing idempotently
+# ======================================================
 
 logger = logging.getLogger(__name__)
 

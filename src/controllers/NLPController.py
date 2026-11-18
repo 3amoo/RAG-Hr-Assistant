@@ -1,9 +1,29 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from .BaseController import BaseController
 from models.db_schemes import Project, DataChunk, RetrievedDocument
 from models.RagModels import Citation, RagAnswer
 from stores.llm.LLMEnums import DocumentTypeEnum
 from typing import List
 import json
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - NLPController — orchestrate indexing, retrieval and RAG answers
+#   - __init__ — initialize instance state and dependencies
+#   - create_collection_name — build the size/project-specific collection name
+#   - reset_vector_db_collection — delete and recreate a project collection
+#   - get_vector_db_collection_info — return collection statistics or None
+#   - index_into_vector_db — embed chunks and insert them into the vector store
+#   - search_vector_db_collection — run vector similarity search for a query
+#   - _build_citation — build a citation object from a retrieved chunk
+#   - _refusal — return the standard low-confidence refusal
+#   - answer_rag_question — retrieve evidence and generate a cited answer
+# ======================================================
 
 class NLPController(BaseController):
 

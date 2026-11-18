@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import asyncio
 import logging
 
@@ -6,6 +10,14 @@ from celery import chain
 from celery_app import celery_app
 from tasks.data_indexing import _index_data_content
 from tasks.file_processing import process_project_files
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - push_after_process_task — queue indexing after processing completes
+# - process_and_push_workflow — chain process, index and answer steps
+# ======================================================
 
 logger = logging.getLogger(__name__)
 

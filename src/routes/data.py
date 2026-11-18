@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from fastapi import APIRouter, Depends, Request, UploadFile, status
 from fastapi.responses import JSONResponse
 from kombu.exceptions import OperationalError as BrokerOperationalError
@@ -15,6 +19,16 @@ from models.db_schemes import Asset
 from models.enums.AssetTypeEnum import AssetTypeEnum
 from tasks.file_processing import process_project_files
 from tasks.process_workflow import process_and_push_workflow
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - _broker_unavailable_response — report broker outage clearly
+# - upload_data — validate and store uploaded files
+# - process_endpoint — queue document processing for a project
+# - process_and_push_endpoint — queue chained process-and-index workflow
+# ======================================================
 
 logger = logging.getLogger('uvicorn.error')
 

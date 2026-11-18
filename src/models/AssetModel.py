@@ -1,8 +1,23 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from sqlalchemy.future import select
 
 from .BaseDataModel import BaseDataModel
 from .db_schemes import Asset
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - AssetModel — data access for uploaded assets
+#   - __init__ — initialize instance state and dependencies
+#   - create_instance — build a DAO bound to the current DB session
+#   - create_asset — persist a new asset record
+#   - get_all_project_assets — list assets belonging to a project
+#   - get_asset_record — fetch one asset by id and project
+# ======================================================
 
 class AssetModel(BaseDataModel):
 

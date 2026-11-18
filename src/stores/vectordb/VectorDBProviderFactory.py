@@ -1,7 +1,20 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from .providers import QdrantDBProvider, PGVectorProvider
 from .VectorDBEnums import VectorDBEnums
 from controllers.BaseController import BaseController
 from sqlalchemy.orm import sessionmaker
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - VectorDBProviderFactory — instantiate the configured vector store
+#   - __init__ — initialize instance state and dependencies
+#   - create — build a provider instance from settings
+# ======================================================
 
 class VectorDBProviderFactory:
     def __init__(self, config, db_client: sessionmaker=None):

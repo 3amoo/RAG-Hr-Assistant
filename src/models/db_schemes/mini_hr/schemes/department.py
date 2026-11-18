@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import uuid
 
 from sqlalchemy import Column, DateTime, Integer, String, func
@@ -5,6 +9,12 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from .mini_hr_base import SQLAlchemyBase
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - Department — SQLAlchemy model for departments
+# ======================================================
 
 class Department(SQLAlchemyBase):
 

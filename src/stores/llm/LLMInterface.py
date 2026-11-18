@@ -1,5 +1,20 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from abc import ABC, abstractmethod
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - LLMInterface — abstract contract for LLM providers
+#   - set_generation_model — select the generation model id
+#   - set_embedding_model — select the embedding model and size
+#   - generate_text — generate a grounded text response
+#   - embed_text — embed one or more text inputs
+#   - construct_prompt — build a provider-specific message dict
+# ======================================================
 
 class LLMInterface(ABC):
 

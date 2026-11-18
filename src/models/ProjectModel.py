@@ -1,9 +1,24 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from sqlalchemy import func
 from sqlalchemy.future import select
 
 from .BaseDataModel import BaseDataModel
 from .db_schemes import Project
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - ProjectModel — data access for projects
+#   - __init__ — initialize instance state and dependencies
+#   - create_instance — build a DAO bound to the current DB session
+#   - create_project — persist a new project
+#   - get_project_or_create_one — fetch or lazily create a project
+#   - get_all_projects — list all projects
+# ======================================================
 
 class ProjectModel(BaseDataModel):
 

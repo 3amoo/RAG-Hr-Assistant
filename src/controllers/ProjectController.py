@@ -1,7 +1,20 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from .BaseController import BaseController
 from fastapi import UploadFile
 from models import ResponseSignal
 import os
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - ProjectController — resolve project folders on disk
+#   - __init__ — initialize instance state and dependencies
+#   - get_project_path — build the filesystem path for a project
+# ======================================================
 
 class ProjectController(BaseController):
     

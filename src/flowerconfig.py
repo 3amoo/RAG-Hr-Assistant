@@ -1,6 +1,17 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import os
 
 from dotenv import load_dotenv
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - No module-level functions — configuration/data only
+# ======================================================
 
 # The Docker image receives configuration through environment variables, while
 # local development usually uses a .env file. Support both.

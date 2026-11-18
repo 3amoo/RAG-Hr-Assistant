@@ -1,8 +1,18 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from sqlalchemy import Column, DateTime, Index, Integer, String, func
 from sqlalchemy.dialects.postgresql import JSONB
 
 from .mini_hr_base import SQLAlchemyBase
 
+
+# ======================================================
+# Func.
+# ======================================================
+# - CeleryTaskExecution — SQLAlchemy model for idempotent task claims
+# ======================================================
 
 class CeleryTaskExecution(SQLAlchemyBase):
 

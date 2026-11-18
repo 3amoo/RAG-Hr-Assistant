@@ -1,4 +1,19 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from enum import Enum
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - VectorDBEnums — supported vector database backends
+# - DistanceMethodEnums — supported distance metrics
+# - PgVectorTableSchemeEnums — pgvector collection/table naming values
+# - PgVectorDistanceMethodEnums — pgvector operator classes
+# - PgVectorIndexTypeEnums — pgvector index types
+# ======================================================
 
 class VectorDBEnums(Enum):
     QDRANT = "QDRANT"

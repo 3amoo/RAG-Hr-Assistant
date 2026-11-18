@@ -1,7 +1,21 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from helpers.config import get_settings, Settings
 import os
 import random
 import string
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - BaseController — base helper shared by domain controllers
+#   - __init__ — initialize instance state and dependencies
+#   - generate_random_string — generate a random identifier string
+#   - get_database_path — resolve the local database path
+# ======================================================
 
 class BaseController:
     

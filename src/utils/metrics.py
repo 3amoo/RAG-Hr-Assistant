@@ -1,7 +1,20 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - PrometheusMiddleware — record HTTP request metrics
+#   - dispatch — time a request and record its metrics
+# - setup_metrics — register metrics middleware and endpoint
+# ======================================================
 
 # Define metrics
 REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP Requests', ['method', 'endpoint', 'status'])

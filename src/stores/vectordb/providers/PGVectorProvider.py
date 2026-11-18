@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from ..VectorDBInterface import VectorDBInterface
 from ..VectorDBEnums import (DistanceMethodEnums, PgVectorTableSchemeEnums, 
                              PgVectorDistanceMethodEnums, PgVectorIndexTypeEnums)
@@ -6,6 +10,28 @@ from typing import List
 from models.db_schemes import RetrievedDocument
 from sqlalchemy.sql import text as sql_text
 import json
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - _parse_metadata — decode JSONB metadata into a dict
+# - PGVectorProvider — PostgreSQL + pgvector implementation
+#   - __init__ — initialize instance state and dependencies
+#   - connect — open the vector store connection
+#   - disconnect — close the vector store connection
+#   - is_collection_existed — check whether a collection exists
+#   - list_all_collections — list available collections
+#   - get_collection_info — handle get collection info
+#   - delete_collection — drop a collection
+#   - create_collection — create a collection with the configured distance
+#   - is_index_existed — check whether a vector index exists
+#   - create_vector_index — create an index once threshold is reached
+#   - reset_vector_index — rebuild the vector index
+#   - insert_one — insert a single vector record
+#   - insert_many — bulk insert vector records
+#   - search_by_vector — query the collection by vector similarity
+# ======================================================
 
 def _parse_metadata(value) -> dict:
     """Metadata is stored as JSONB but may come back as a JSON string."""

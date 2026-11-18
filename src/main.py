@@ -1,3 +1,7 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 import warnings
 
 # openai 1.75 imports pydantic.v1, whose compatibility shim warns on Python
@@ -24,6 +28,16 @@ from sqlalchemy.orm import sessionmaker
 
 # Import metrics setup
 from utils.metrics import setup_metrics
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - startup_span — wire database, providers and vector store on startup
+# - shutdown_span — dispose database and vector store connections
+# - health — unauthenticated liveness probe for local monitors
+# - root — redirect the root path to the local UI
+# ======================================================
 
 app = FastAPI()
 

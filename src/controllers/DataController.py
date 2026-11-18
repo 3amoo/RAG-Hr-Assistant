@@ -1,9 +1,24 @@
+# ======================================================
+# Import Libs
+# ======================================================
+
 from .BaseController import BaseController
 from .ProjectController import ProjectController
 from fastapi import UploadFile
 from models import ResponseSignal
 import re
 import os
+
+
+# ======================================================
+# Func.
+# ======================================================
+# - DataController — validate and stage uploaded documents
+#   - __init__ — initialize instance state and dependencies
+#   - validate_uploaded_file — check file type and size before storage
+#   - generate_unique_filepath — build a collision-free storage path
+#   - get_clean_file_name — sanitize an uploaded file name
+# ======================================================
 
 class DataController(BaseController):
     
